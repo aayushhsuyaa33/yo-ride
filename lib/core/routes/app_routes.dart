@@ -1,3 +1,4 @@
 class AppRoutes {
-  static const String splashScreen = "/SplashScreen";
+  static const String bookingScreen = "/BookingScreen";
+  static const String mapPickerScreen = "/MapPickerScreen";
 }
