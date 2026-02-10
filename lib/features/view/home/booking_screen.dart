@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:yo_ride/core/constants/app_colors.dart';
 import 'package:yo_ride/core/routes/app_routes.dart';
 import 'package:yo_ride/features/widget/custom_textfield.dart';
@@ -57,7 +58,8 @@ class BookingScreenState extends State<BookingScreen> {
     );
     Placemark placemark = placeMarks.first;
     log(placemark.toString());
-    String currentLocation = "${placemark.subLocality}, ${placemark.locality}";
+    String currentLocation =
+        "${placemark.subLocality!.isEmpty ? placemark.thoroughfare : placemark.subLocality}, ${placemark.locality}";
 
     setState(() {
       pickupLocationController.text = currentLocation;
@@ -97,15 +99,24 @@ class BookingScreenState extends State<BookingScreen> {
                         hintText: "Enter pickup point",
                         controller: pickupLocationController,
                         prefixIcon: Icons.my_location,
-                        onMapTap: () {
-                          Navigator.pushNamed(
+                        onMapTap: () async {
+                          FocusScope.of(context).unfocus();
+
+                          final result = await Navigator.pushNamed(
                             context,
                             AppRoutes.mapPickerScreen,
                             arguments: {
                               "selectedLng": selectedLng,
                               'selectedLat': selectedLat,
+                              'title': "PickUp Address",
+                              "address": pickupLocationController.text,
                             },
                           );
+                          if (result != null) {
+                            setState(() {
+                              pickupLocationController.text = result.toString();
+                            });
+                          }
                         },
                       ),
                       SizedBox(height: 15.h),

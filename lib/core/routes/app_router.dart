@@ -24,11 +24,18 @@ class AppRouter {
     if (settings.name == AppRoutes.bookingScreen) {
       return transtionTo(BookingScreen());
     } else if (settings.name == AppRoutes.mapPickerScreen) {
-      final args = settings.arguments as Map<String, double>?;
+      final args = settings.arguments as Map<String, dynamic>?;
       final double selectedLat = args?['selectedLat'] ?? 27.7172; // default
       final double selectedLng = args?['selectedLng'] ?? 85.3240; // default
+      final String title = args?['title'] ?? "PickUp Address";
+      final String address = args?['address'] ?? "";
       return transtionTo(
-        MapPickerScreen(selectedLat: selectedLat, selectedLng: selectedLng),
+        MapPickerScreen(
+          selectedLat: selectedLat,
+          selectedLng: selectedLng,
+          title: title,
+          address: address,
+        ),
       );
     } else {
       return transtionTo(BookingScreen());
